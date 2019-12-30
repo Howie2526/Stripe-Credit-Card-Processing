@@ -58,11 +58,11 @@
 						<div style="display:inline-block;width:100%;">
 							<div class="width-50">
 								<label for="first-name">First Name &nbsp;<i class="fas fa-asterisk"></i></label><br>
-								<input class="input" id="first-name" name="first-name" maxlength="32" placeholder="First Name" type="text" value="Harold" required>
+								<input class="input" id="first-name" name="first-name" maxlength="32" placeholder="First Name" type="text" required>
 							</div>
 							<div class="width-50">
 								<label for="last-name">Last Name &nbsp;<i class="fas fa-asterisk"></i></label><br>
-								<input class="input" id="last-name" maxlength="32" name="last-name" placeholder="Last Name" type="text" value="Indoe" required>
+								<input class="input" id="last-name" maxlength="32" name="last-name" placeholder="Last Name" type="text" required>
 							</div>
 						</div>
 						<div>
@@ -75,35 +75,35 @@
 						<div style="display:inline-block;width:100%;">
 							<div class="width-50">
 								<label for="donation-amount">Donation Amount &nbsp;<i class="fas fa-asterisk"></i></label><br>
-								<input class="input" id="donation-amount" name="donation-amount" pattern="(([1-9][0-9][0-9])|([1-9][0-9])|([5-9]))" placeholder="5" title="Min 5, max 999, no cents please." type="text" value="10" required>
+								<input class="input" id="donation-amount" name="donation-amount" pattern="(([1-9][0-9][0-9])|([1-9][0-9])|([5-9]))" placeholder="5" title="Min 5, max 999, no cents please." type="text" required>
 							</div>
 							<div class="width-50">
 								<label for="email-address">Email Address &nbsp;<i class="fas fa-asterisk"></i></label><br>
-								<input class="input" id="email-address" name="email-address" placeholder="Email Address" type="email" value="Mankind014@gmail.com" required>
+								<input class="input" id="email-address" name="email-address" placeholder="Email Address" type="email" required>
 							</div>
 						</div>
 						<div style="display:inline-block;width:100%;">
 							<div class="width-25">
 								<label for="unit">Unit #</label><br>
-								<input class="input" id="unit" maxlength="10" name="unit" placeholder="Unit #" type="text" value="13">
+								<input class="input" id="unit" maxlength="10" name="unit" placeholder="Unit #" type="text">
 							</div>
 							<div class="width-75">
 								<label for="address">Address &nbsp;<i class="fas fa-asterisk"></i></label><br>
-								<input class="input" id="address" name="address" placeholder="Address" type="text" value="199 Westwood Rd" required>
+								<input class="input" id="address" name="address" placeholder="Address" type="text" required>
 							</div>
 						</div>
 						<div style="display:inline-block;width:100%;">
 							<div class="width-35">
 								<label for="city">City &nbsp;<i class="fas fa-asterisk"></i></label><br>
-								<input class="input" id="city" name="city" placeholder="City" type="text" value="Guelph" required>
+								<input class="input" id="city" name="city" placeholder="City" type="text" required>
 							</div>
 							<div class="width-35">
 								<label for="province-territory">Province/Territory &nbsp;<i class="fas fa-asterisk"></i></label><br>
-								<input class="input" id="province-territory" name="province-territory" placeholder="Province/Territory" type="text" value="Ontario" required>
+								<input class="input" id="province-territory" name="province-territory" placeholder="Province/Territory" type="text" required>
 							</div>
 							<div class="width-30">
 								<label for="country">Country &nbsp;<i class="fas fa-asterisk"></i></label><br>
-								<input class="input" id="country" name="country" placeholder="Country" type="text" value="Canada" required>
+								<input class="input" id="country" name="country" placeholder="Country" type="text" required>
 							</div>
 						</div>
 						<p></p>
