@@ -1,3 +1,19 @@
+<?php
+
+require_once 'C:/xampp/composer/vendor/autoload.php';
+
+\Stripe\Stripe::setApiKey('censor-sec');
+
+$intent = \Stripe\PaymentIntent::create([
+	'amount' => 500,
+	'currency' => 'cad',
+	'payment_method_types' => ['card'],
+]);
+
+$client_secret = $intent->client_secret;
+
+?>
+
 <!doctype html>
 <html lang="en">
 	<head>
@@ -11,7 +27,7 @@
 		<title>Stripe - The Canadian Disability Union</title>
 		<meta name="robots" content="noindex, nofollow">
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap">
-		<link rel="stylesheet" href="<?php echo($base); ?>styles.css?v=1.10">
+		<link rel="stylesheet" href="<?php echo($base); ?>styles.css?v=1.11">
 		<link rel="stylesheet" href="<?php echo($base); ?>menu.css?v=1.02">
 		<link rel="preload" href="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" as="script">
 		<link rel="preload" href="https://s3.amazonaws.com/menumaker/menumaker.min.js" as="script">
@@ -51,7 +67,7 @@
 			<main>
 				<h2>Stripe</h2>
 				<p>Please note, this page is currently in design stage and not yet meant for public viewing. This page is linked no where else on our site which means if you are viewing it, you came across it by accident or we personally gave you the address. Please do not enter any credit card information as this page is not yet fully secure and complete. If you chose to ignore our advice, it is currently set up for testing meaning even if you do enter any credit card information, no charges will be issued to your credit card.</p>
-				<form action="http://localhost/cdunion/stripe/stripe.php" method="post" id="payment-form" style="max-width:600px;">
+				<form action="/charge" method="post" id="payment-form" style="max-width:600px;">
 					<input class="form-title" name="form-title" value="Credit Card Donation">
 					<input class="middle-name" id="middle-name" name="middle-name" placeholder="Middle Name" type="text">
 					<div class="form-row">
@@ -108,7 +124,8 @@
 						</div>
 						<p></p>
 						<div class="center">
-							<button class="form-button">Donate</button>
+							<input type="submit" class="submit" value="Submit Payment">
+							<!-- <button class="form-button" client-secret="<?php echo ($client_secret); ?>">Donate</button> -->
 						</div>
 					</div>
 				</form>
@@ -130,76 +147,6 @@
 		</script>
 		</script>
 		<script>
-			// Create a Stripe client.
-			var stripe = Stripe('censored');
-			
-			// Create an instance of Elements.
-			var elements = stripe.elements();
-			
-			// Custom styling can be passed to options when creating an Element.
-			// (Note that this demo uses a wider set of styles than the guide below.)
-			var style = {
-				base: {
-					color: '#32325d',
-					fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-					fontSmoothing: 'antialiased',
-					fontSize: '16px',
-					'::placeholder': {
-						color: '#aab7c4'
-					}
-				},
-				invalid: {
-					color: '#fa755a',
-					iconColor: '#fa755a'
-				}
-			};
-			
-			// Create an instance of the card Element.
-			var card = elements.create('card', {style: style});
-			
-			// Add an instance of the card Element into the `card-element` <div>.
-			card.mount('#card-element');
-			
-			// Handle real-time validation errors from the card Element.
-			card.addEventListener('change', function(event) {
-				var displayError = document.getElementById('card-errors');
-				if (event.error) {
-					displayError.textContent = event.error.message;
-				} else {
-					displayError.textContent = '';
-				}
-			});
-			
-			// Handle form submission.
-			var form = document.getElementById('payment-form');
-			form.addEventListener('submit', function(event) {
-				event.preventDefault();
-				
-				stripe.createToken(card).then(function(result) {
-					if (result.error) {
-						// Inform the user if there was an error.
-						var errorElement = document.getElementById('card-errors');
-						errorElement.textContent = result.error.message;
-					} else {
-						// Send the token to your server.
-						stripeTokenHandler(result.token);
-					}
-				});
-			});
-			
-			// Submit the form with the token ID.
-			function stripeTokenHandler(token) {
-				// Insert the token ID into the form so it gets submitted to the server
-				var form = document.getElementById('payment-form');
-				var hiddenInput = document.createElement('input');
-				hiddenInput.setAttribute('type', 'hidden');
-				hiddenInput.setAttribute('name', 'stripeToken');
-				hiddenInput.setAttribute('value', token.id);
-				form.appendChild(hiddenInput);
-				
-				// Submit the form
-				form.submit();
-			}
 		</script>
 	</body>
 </html>
