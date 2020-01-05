@@ -1,33 +1,16 @@
-<?php
-
-require_once 'C:/xampp/composer/vendor/autoload.php';
-
-\Stripe\Stripe::setApiKey('censor-sec');
-
-$intent = \Stripe\PaymentIntent::create([
-	'amount' => 500,
-	'currency' => 'cad',
-	'payment_method_types' => ['card'],
-]);
-
-$client_secret = $intent->client_secret;
-
-?>
-
 <!doctype html>
 <html lang="en">
 	<head>
 		<?php
 		if ($server === 'cdunion.ca') {
-			include ($root . '/google-analytics.php');
+			include ($root . 'common/google-analytics.php');
 		}
 		?>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Stripe - The Canadian Disability Union</title>
-		<meta name="robots" content="noindex, nofollow">
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap">
-		<link rel="stylesheet" href="<?php echo($base); ?>styles.css?v=1.11">
+		<link rel="stylesheet" href="<?php echo($base); ?>common/css.css">
 		<link rel="stylesheet" href="<?php echo($base); ?>menu.css?v=1.02">
 		<link rel="preload" href="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" as="script">
 		<link rel="preload" href="https://s3.amazonaws.com/menumaker/menumaker.min.js" as="script">
@@ -65,71 +48,10 @@ $client_secret = $intent->client_secret;
 				</div>
 			</header>
 			<main>
-				<h2>Stripe</h2>
-				<p>Please note, this page is currently in design stage and not yet meant for public viewing. This page is linked no where else on our site which means if you are viewing it, you came across it by accident or we personally gave you the address. Please do not enter any credit card information as this page is not yet fully secure and complete. If you chose to ignore our advice, it is currently set up for testing meaning even if you do enter any credit card information, no charges will be issued to your credit card.</p>
-				<form action="/charge" method="post" id="payment-form" style="max-width:600px;">
-					<input class="form-title" name="form-title" value="Credit Card Donation">
-					<input class="middle-name" id="middle-name" name="middle-name" placeholder="Middle Name" type="text">
-					<div class="form-row">
-						<div style="display:inline-block;width:100%;">
-							<div class="width-50">
-								<label for="first-name">First Name &nbsp;<i class="fas fa-asterisk"></i></label><br>
-								<input class="input" id="first-name" name="first-name" maxlength="32" placeholder="First Name" type="text" required>
-							</div>
-							<div class="width-50">
-								<label for="last-name">Last Name &nbsp;<i class="fas fa-asterisk"></i></label><br>
-								<input class="input" id="last-name" maxlength="32" name="last-name" placeholder="Last Name" type="text" required>
-							</div>
-						</div>
-						<div>
-							<label for="card-element">Credit/Debit Card &nbsp;<i class="fas fa-asterisk"></i></label>
-							<div class="input" id="card-element">
-							</div>
-							<div id="card-errors" role="alert">
-							</div>
-						</div>
-						<div style="display:inline-block;width:100%;">
-							<div class="width-50">
-								<label for="donation-amount">Donation Amount &nbsp;<i class="fas fa-asterisk"></i></label><br>
-								<input class="input" id="donation-amount" name="donation-amount" pattern="(([1-9][0-9][0-9])|([1-9][0-9])|([5-9]))" placeholder="5" title="Min 5, max 999, no cents please." type="text" required>
-							</div>
-							<div class="width-50">
-								<label for="email-address">Email Address &nbsp;<i class="fas fa-asterisk"></i></label><br>
-								<input class="input" id="email-address" name="email-address" placeholder="Email Address" type="email" required>
-							</div>
-						</div>
-						<div style="display:inline-block;width:100%;">
-							<div class="width-25">
-								<label for="unit">Unit #</label><br>
-								<input class="input" id="unit" maxlength="10" name="unit" placeholder="Unit #" type="text">
-							</div>
-							<div class="width-75">
-								<label for="address">Address &nbsp;<i class="fas fa-asterisk"></i></label><br>
-								<input class="input" id="address" name="address" placeholder="Address" type="text" required>
-							</div>
-						</div>
-						<div style="display:inline-block;width:100%;">
-							<div class="width-35">
-								<label for="city">City &nbsp;<i class="fas fa-asterisk"></i></label><br>
-								<input class="input" id="city" name="city" placeholder="City" type="text" required>
-							</div>
-							<div class="width-35">
-								<label for="province-territory">Province/Territory &nbsp;<i class="fas fa-asterisk"></i></label><br>
-								<input class="input" id="province-territory" name="province-territory" placeholder="Province/Territory" type="text" required>
-							</div>
-							<div class="width-30">
-								<label for="country">Country &nbsp;<i class="fas fa-asterisk"></i></label><br>
-								<input class="input" id="country" name="country" placeholder="Country" type="text" required>
-							</div>
-						</div>
-						<p></p>
-						<div class="center">
-							<input type="submit" class="submit" value="Submit Payment">
-							<!-- <button class="form-button" client-secret="<?php echo ($client_secret); ?>">Donate</button> -->
-						</div>
-					</div>
-				</form>
-				<p></p>
+				<h2>Donation Via Credit Card</h2>
+				<?php
+				include ($root . 'credit-card-donation/php.php');
+				?>
 			</main>
 			<footer>
 				<div class="footer">
@@ -145,8 +67,48 @@ $client_secret = $intent->client_secret;
 				format: "multitoggle"
 			});
 		</script>
-		</script>
 		<script>
+			// Set your publishable key: remember to change this to your live publishable key in production
+			// See your keys here: https://dashboard.stripe.com/account/apikeys
+			var stripe = Stripe('censored');
+			var elements = stripe.elements();
+			// Custom styling can be passed to options when creating an Element.
+			var style = {
+				base: {
+					// Add your base input styles here. For example:
+					color: "#32325d",
+				}
+			};
+			// Create an instance of the card Element.
+			var card = elements.create('card', {style: style});
+			// Add an instance of the card Element into the `card-element` <div>.
+			card.mount('#card-element');
+			// Create a token or display an error when the form is submitted.
+			var form = document.getElementById('payment-form');
+			form.addEventListener('submit', function(event) {
+				event.preventDefault();
+				stripe.createToken(card).then(function(result) {
+					if (result.error) {
+						// Inform the customer that there was an error.
+						var errorElement = document.getElementById('card-errors');
+						errorElement.textContent = result.error.message;
+					} else {
+						function stripeTokenHandler(token) {
+							// Insert the token ID into the form so it gets submitted to the server
+							var form = document.getElementById('payment-form');
+							var hiddenInput = document.createElement('input');
+							hiddenInput.setAttribute('type', 'hidden');
+							hiddenInput.setAttribute('name', 'stripeToken');
+							hiddenInput.setAttribute('value', token.id);
+							form.appendChild(hiddenInput);
+							// Submit the form
+							form.submit();
+						}
+						// Send the token to your server.
+						stripeTokenHandler(result.token);
+					}
+				});
+			});
 		</script>
 	</body>
 </html>
