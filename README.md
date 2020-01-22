@@ -1,11 +1,13 @@
 # Stripe-Credit-Card-Processing
 
-These files is a generally a working script which connects securely to Stripe to process credit card transactions. I say generally because on appearance, I don't see any problems and I have tested it with no major problems, a few minor things i don't like, but they are more cosmetic than anything. I have not tested this script thoroughly or placed it live yet, use at your own risk, all liability is placed on you if you decide to use it.
+We are a Canadian registered not for profit organization which means we have little to no income.
 
-In order for the script to work properly you must use your own public and private keys (I censored mine), you must install the stripe library via Composer on both your testing and live server. And you must change the location addresses to match yours, unless your files are in the exact same place as mine, my location will not work and will result in an error.
+We are requesting assistance with integration of Stripe into our website. We currently have a working and secure integration of Stripe which fully complies with North American regulations and standards. We are looking to improve our code whether it be speed improvements, best practices or something else. We have listed what we are seeking assistance with below.
 
-No credit card number, cvc, expiry date or postal code is transmitted via your server, they are sent directly to Stripe, and your server is sent a token, which you submit to Stripe. The beauty of this is there is no chance of you revealing an individuals' credit card info, and on rare chance the token is intercepted, it's useless to anyone else and contains no credit card information. The best defense against hackers is don't transmit or store any private information, if you have nothing of value, they won't be interested in you.
+1. Any improvement, whether it be speed, efficiency or best practices.
+2. is there a better way to transfer to a canonical url rather than a redirect as we do in index.php.
+3. Reducing number of if statements while accomplishing the same.
+4. Integrate Strong Customer Authentication so as to comply with European laws.
+5. Right now, the token only includes postal code, expiry date, cvc number, and card number. I would like to integrate address and other info into the token too, (I'm not sure that's even possible).
 
-This script uses paymentcharges and is in compliance with North American security standards and regulations, however, it does not comply with European standards and regulations which are much more strict. I'm not a lawyer, these are nothing more than my belief, please consult with a lawyer before taking my advice, if you fail to consult a lawyer and take my advice which is as is, you accept all liability for anything done wrong.
-
-With that said, my next step is to create a script which uses client secrets, paymentintents and complies with European Standards and regulations. If you would like to assist in that or even improve my current script, please do and add to it, merci.
+Any assistance you can offer to assist with anything above or something else we have not thought of is greatly appreciated. thank you.
