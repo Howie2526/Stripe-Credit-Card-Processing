@@ -13,5 +13,5 @@ if ($server === "localhost") {
 	$base = 'https://cdunion.ca/';
 }
 include ($root . 'credit-card-donation/body.php');
-die();
+exit();
 ?>
