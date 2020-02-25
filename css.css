@@ -1,0 +1,79 @@
+@charset "utf-8";
+
+html{
+	overflow-y:scroll;
+}
+
+body{
+	background-color:#F5EFF4;
+	font-family:'Lora',serif;
+	font-size:100%;
+	font-weight:400;
+	line-height:2;
+	text-align:justify;
+}
+
+footer{
+	margin-top:35px;
+	padding-bottom:35px;
+}
+
+h1{
+	font-size:250%;
+	font-weight:700;
+	margin:35px 10px;
+}
+
+h2{
+	font-size:200%;
+	font-weight:700;
+	margin:35px 10px;
+}
+
+h3{
+	font-size:150%;
+	font-weight:700;
+	margin:25px 10px;
+}
+
+header{
+	padding-top:35px;
+}
+
+.container{
+	background-color:#FFFFFF;
+	display:flex;
+	flex-direction:column;
+	min-height:100vh;
+}
+
+/* When modifying .custom-field, also modify style:base in credit-card-input.js */
+
+.custom-field{
+	font-family:'Lora',serif;
+	font-size:16px;
+	line-height:1.5
+}
+
+.filler{
+	flex:1;
+}
+
+.hidden{
+	display:none;
+}
+
+.max-width-600{
+	max-width:600px;
+}
+
+.nav-link,
+.navbar-text{
+	color:#FFFFFF !important;
+}
+
+@media(max-width:670px){
+	body{
+		text-align:left;
+	}
+}
