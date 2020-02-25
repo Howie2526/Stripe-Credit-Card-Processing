@@ -6,7 +6,7 @@ Upgrades in this version
 
 1. We have integrated Bootstrap into our entire website.
 2. We no longer use the Stripe library included in Composer. We now use the PHP library directly from Stripe and available on Stripe's GitHub channel which can be found here, https://github.com/stripe/stripe-php.
-3.Our catch errors now work.
+3. Our catch errors now work.
 4. We have reduced the number of input fields on our form and got rid of some which were not necessary.
 5. We now process credit card transactions using paymentintents rather than charges.
 
