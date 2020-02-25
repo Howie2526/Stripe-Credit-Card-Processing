@@ -4,157 +4,91 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-hide */
 
-if (isset($_POST['form-title'])) {
-	$array = array(
-		'form-title' => $_POST['form-title'],
-		'middle-name' => $_POST['middle-name'],
-		'first-name' => $_POST['first-name'],
-		'last-name' => $_POST['last-name'],
-		'donation-amount' => $_POST['donation-amount'],
-		'email-address' => $_POST['email-address'],
-		'unit' => $_POST['unit'],
-		'address' => $_POST['address'],
-		'city' => $_POST['city'],
-		'province' => $_POST['province'],
-		'country' => $_POST['country'],
-	);
-	$token = $_POST['stripeToken'];
-	$body = '';
-	if ((!isset($array['form-title'])) || $array['form-title'] != 'Credit Card Donation') {
-		$body = $body . '<p>We have detected some suspicious activity, Form Title is not in the correct format.</p>';
-	}
-	if ((!isset($array['middle-name'])) || (!empty($array['middle-name']))) {
-		$body = $body . '<p>We have detected some suspicious activity, Middle Name is not in the correct format.</p>';
-	}
-	if (isset($array['first-name'])) {
-		$array['first-name'] = filter_var($array['first-name'], FILTER_SANITIZE_STRING);
-	}
-	if ((!isset($array['first-name'])) || (empty($array['first-name']))) {
-		$body = $body . '<p>We have detected some suspicious activity, First Name is not in the correct format.</p>';
-	}
-	if (isset($array['last-name'])) {
-		$array['last-name'] = filter_var($array['last-name'], FILTER_SANITIZE_STRING);
-	}
-	if ((!isset($array['last-name'])) || (empty($array['last-name']))) {
-		$body = $body . '<p>We have detected some suspicious activity, Last Name is not in the correct format.</p>';
-	}
-	if (isset($array['donation-amount'])) {
-		$array['donation-amount'] = filter_var($array['donation-amount'], FILTER_VALIDATE_INT);
-	}
-	if ((!isset($array['donation-amount'])) || (empty($array['donation-amount']))) {
-		$body = $body . '<p>We have detected some suspicious activity, Donation Amount is not in the correct format.</p>';
-	}
-	if (isset($array['email-address'])) {
-		$array['email-address'] = filter_var($array['email-address'], FILTER_SANITIZE_EMAIL);
-	}
-	if ((!isset($array['email-address'])) || (empty($array['email-address']))) {
-		$body = $body . '<p>We have detected some suspicious activity, Email Address is not in the correct format.</p>';
-	} else if (!filter_var($array['email-address'], FILTER_VALIDATE_EMAIL)) {
-		$body = $body . '<p>' . $array['email-address'] . ' is not considered valid email address.</p>';
-	}
-	if (isset($array['unit'])) {
-		$array['unit'] = filter_var($array['unit'], FILTER_SANITIZE_STRING);
-	}
-	if (!isset($array['unit'])) {
-		$body = $body . '<p>We have detected some suspicious activity, Unit # is not in the correct format.</p>';
-	}
-	if (isset($array['address'])) {
-		$array['address'] = filter_var($array['address'], FILTER_SANITIZE_STRING);
-	}
-	if ((!isset($array['address'])) || (empty($array['address']))) {
-		$body = $body . '<p>We have detected some suspicious activity, Address is not in the correct format.</p>';
-	}
-	if (isset($array['city'])) {
-		$array['city'] = filter_var($array['city'], FILTER_SANITIZE_STRING);
-	}
-	if ((!isset($array['city'])) || (empty($array['city']))) {
-		$body = $body . '<p>We have detected some suspicious activity, City is not in the correct format.</p>';
-	}
-	if (isset($array['province'])) {
-		$array['province'] = filter_var($array['province'], FILTER_SANITIZE_STRING);
-	}
-	if ((!isset($array['province'])) || (empty($array['province']))) {
-		$body = $body . '<p>We have detected some suspicious activity, Province is not in the correct format.</p>';
-	}
-	if (isset($array['country'])) {
-		$array['country'] = filter_var($array['country'], FILTER_SANITIZE_STRING);
-	}
-	if ((!isset($array['country'])) || (empty($array['country']))) {
-		$body = $body . '<p>We have detected some suspicious activity, Country is not in the correct format.</p>';
-	}
-	if (empty($body)) {
-		$name = $array['first-name'] . " " . $array['last-name'];
-		if (empty($array['unit'])) {
-			$address = $array['address'];
-		} else {
-			$address = $array['unit'] . "-" . $array['address'];
+$_POST['form-title']='Credit Card Donation';
+$_POST['middle-name']='';
+$_POST['name']='John Doe';
+$_POST['email-address']='test@test.com';
+$_POST['donation']='5';
+$_POST['stripeToken']='Test';
+/* hide */
+
+if((isset($_POST['form-title']))&&(isset($_POST['middle-name']))&&(isset($_POST['name']))&&(isset($_POST['email-address']))&&(isset($_POST['donation']))&&(isset($_POST['stripeToken']))){
+	$FormTitle=$_POST['form-title'];
+	$MiddleName=$_POST['middle-name'];
+	$Name=$_POST['name'];
+	$EmailAddress=$_POST['email-address'];
+	$Donation=$_POST['donation'];
+	$StripeToken=$_POST['stripeToken'];
+	$DonationURL='"'.$BaseURL.'credit-card-donation/"';
+	
+	$Name=filter_var($Name,FILTER_SANITIZE_STRING);
+	$EmailAddress=filter_var($EmailAddress,FILTER_SANITIZE_EMAIL);
+	$NameLength=strlen($Name);
+	$EmailAddressLength=strlen($EmailAddress);
+	
+	if($FormTitle!='Credit Card Donation'){
+		$body="<p>We have detected some unusual activity, Form Title is not in the correct format, please enable javascript and resubmit your donation.</p><p><a href={$DonationURL}>Return to Donation Page</a>.</p>";
+	}else if($MiddleName!=''){
+		$body="<p>We have detected some unusual activity, Middle Name is not in the correct format, please enable javascript and resubmit your donation.</p><p><a href={$DonationURL}>Return to Donation Page</a>.</p>";
+	}else if(empty($Name)){
+		$body="<p>We have detected some unusual activity, Name is required, please enable javascript and resubmit your donation.</p><p><a href={$DonationURL}>Return to Donation Page</a>.</p>";
+	}else if(($NameLength<2)||($NameLength>64)){
+		$body="<p>We have detected some unusual activity, Name is not in the correct format, please enable javascript and resubmit your donation.</p><p>Name must have minimum 2 characters and maximum 64.</p><p><a href={$DonationURL}>Return to Donation Page</a>.</p>";
+	}else if((!filter_var($EmailAddress,FILTER_VALIDATE_EMAIL))||($EmailAddressLength>64)){
+		$body="<p>We have detected some unusual activity, Email Address is not in the correct format, please enable javascript and resubmit your donation.</p><p>Email Address has a maximum character limit of 64.</p><p><a href={$DonationURL}>Return to Donation Page</a>.</p>";
+	}else if((!ctype_digit($Donation))||($Donation<5)||($Donation>1000)){
+		$body="<p>We have detected some unusual activity, Donation is not in the correct format, please enable javascript and resubmit your donation.</p><p>Minimum donation is $5 and maximum donation is $1000, no cents please.</p><p><a href={$DonationURL}>Return to Donation Page</a>.</p>";
+	}else{
+		$Donation=$Donation*100;
+		require_once("{$Root}libraries\stripe\init.php");
+		if($ReqSer==='localhost'){
+			\Stripe\Stripe::setApiKey('censored');
+		}else{
+			\Stripe\Stripe::setApiKey('censored');
 		}
-		$amount = $array['donation-amount'] . '00';
-		if ($server === 'localhost') {
-			require 'C:\\xampp\composer\vendor\autoload.php';
-		} else {
-			require '/home2/cdunionc/php/composer/vendor/autoload.php';
-		}
-		// \Stripe\Stripe::setApiKey('censored');
-		\Stripe\Stripe::setApiKey('censored');
-		$customer = \Stripe\Customer::create([
-			'name' => $name,
-			'email' => $array['email-address'],
-			'address' => [
-				'line1' => $address,
-				'city' => $array['city'],
-				'state' => $array['province'],
-				'country' => $array['country'],
-			],
-			'source' => $token
-		]);
-		try {
-			\Stripe\Charge::create([
-				'customer' => $customer->id,
-				'amount' => $amount,
-				'currency' => 'cad',
-				'description' => 'Donation',
+		
+		try{
+			$PaymentMethod=\Stripe\PaymentMethod::create([
+				'type'=>'card',
+				'billing_details'=>[
+					'email'=>$EmailAddress,
+					'name'=>$Name,
+				],
+				'card'=>[
+					'token'=>$StripeToken,
+				],
 			]);
-			$body = "<p>Thank you for your very generous donation.</p>";
-		} catch(\Stripe\Exception\CardException $e) {
-			// Since it's a decline, \Stripe\Exception\CardException will be caught
-			$body = 'Status is:' . $e->getHttpStatus() . '\n';
-			$body = $body . 'Type is:' . $e->getError()->type . '\n';
-			$body = $body . 'Code is:' . $e->getError()->code . '\n';
-			// param is '' in this case
-			$body = $body . 'Param is:' . $e->getError()->param . '\n';
-			$body = $body . 'Message is:' . $e->getError()->message . '\n';
-		} catch (\Stripe\Exception\RateLimitException $e) {
-			// Too many requests made to the API too quickly
-			$body = "<p>We apologize for any inconvenience, our API is currently overworked.</p>";
-		} catch (\Stripe\Exception\InvalidRequestException $e) {
-			// Invalid parameters were supplied to Stripe's API
-			$body = "<p>Incorrect parameters were submitted to our credit card processor.</p>";
-		} catch (\Stripe\Exception\AuthenticationException $e) {
-			// Authentication with Stripe's API failed
-			// (maybe you changed API keys recently)
-			$body = "<p>There was a communication problem between our server and our credit card processor.</p>";
-		} catch (\Stripe\Exception\ApiConnectionException $e) {
-			// Network communication with Stripe failed
-			$body = "<p>There was a communication problem between our server and our credit card processor.</p>";
-		} catch (\Stripe\Exception\ApiErrorException $e) {
-			// Display a very generic error to the user, and maybe send
-			// yourself an email
-			$body = "<p>There was a problem submitting your donation request.</p>";
-		} catch (Exception $e) {
-			// Something else happened, completely unrelated to Stripe
-			$body = "<p>An unknown problem occurred</p>";
+			$PaymentIntent=\Stripe\PaymentIntent::create([
+				'amount'=>$Donation,
+				'confirm'=>'true',
+				'currency'=>'cad',
+				'payment_method'=>$PaymentMethod->id,
+				'receipt_email'=>$EmailAddress,
+			]);
+			$body="<p>Thank you for your very generous donation</p>";
+		}catch(\Stripe\Exception\CardException $e){
+			$body="<p>We apologize for the inconvenience but your credit card was declined.</p>";
+		}catch(\Stripe\ExceptionRateLimitException $e){
+			$body="<p>RateLimitException</p>";
+		}catch(\Stripe\ExceptionInvalidRequestException $e){
+			$body="<p>InvalidRequestException</p>";
+		}catch(\Stripe\ExceptionAuthenticationException $e){
+			$body="<p>AuthenticationException</p>";
+		}catch(\Stripe\ExceptionApiConnectionException $e){
+			$body="<p>ApiConnectionException</p>";
+		}catch(\Stripe\ExceptionApiErrorException $e){
+			$body="<p>ApiErrorException</p>";
+		}catch(Exception $e){
+			$body="<p>Exception</p>";
 		}
 	}
-} else {
+}else{
 	ob_start();
-	include('main.php');
-	$body = ob_get_contents();
+	include('form.php');
+	$body=ob_get_contents();
 	ob_end_clean();
 }
-
 
 ?>
 
@@ -162,113 +96,82 @@ if (isset($_POST['form-title'])) {
 <html lang="en">
 	<head>
 		<?php
-		if ($server === 'cdunion.ca') {
-			include ($root . 'common/google-analytics.php');
+		if($ReqSer==='cdunion.ca'){
+			include("{$Root}common/google-analytics.php");
 		}
 		?>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Stripe - The Canadian Disability Union</title>
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap">
-		<link rel="stylesheet" href="<?php echo($base); ?>common/css.css?v=1.00">
-		<link rel="stylesheet" href="<?php echo($base); ?>common/menu.css?v=1.03">
-		<link rel="preload" href="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" as="script">
-		<link rel="preload" href="https://s3.amazonaws.com/menumaker/menumaker.min.js" as="script">
-		<link rel="preload" href="https://js.stripe.com/v3/" as="script">
-		<script async src="https://kit.fontawesome.com/bbe1b77f5f.js" crossorigin="anonymous"></script>
+		<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+		<script src="https://kit.fontawesome.com/bbe1b77f5f.js" crossorigin="anonymous"></script>
+		<script src="https://js.stripe.com/v3/"></script>
+		<script src="<?=$BaseURL;?>common/credit-card-input.php" defer></script>
+		<script src="<?=$BaseURL;?>common/validation.php"></script>
+		<link href="https://fonts.googleapis.com/css?family=Lora:400,700&display=swap" crossorigin="anonymous" rel="stylesheet">
+		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" rel="stylesheet">
+		<link rel="preconnect" href="https://m.stripe.com/" crossorigin>
+		<link rel="preconnect" href="https://kit-free.fontawesome.com" crossorigin="anonymous">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<meta name="robots" content="noindex,nofollow">
+		<title>Credit Card Donation - The Canadian Disability Union</title>
 	</head>
 	<body>
-		<div class="page">
+		<div class="container">
 			<header>
-				<h1>The Canadian Disability Union</h1>
-				<div id="cssmenu">
-					<ul>
-						<li><a href="<?php echo($base); ?>"><i class="fas fa-home"></i> &nbsp;Home</a></li>
-						<li><a href="#"><i class="fas fa-bars"></i> &nbsp;Menu</a>
-							<ul>
-								<li><a href="<?php echo($base); ?>programs/">Programs</a></li>
-								<li><a href="<?php echo($base); ?>disability-facts/">Facts</a></li>
-								<li><a href="<?php echo($base); ?>what-percentage-of-adults-are-disabled/">Survey</a></li>
-							</ul>
-						</li>
-						<li><a href="#">Other</a>
-							<ul>
-								<li><a href="<?php echo($base); ?>news/">News</a></li>
-								<li><a href="<?php echo($base); ?>help-wanted/">Help Wanted</a></li>
-								<li><a href="<?php echo($base); ?>sponsors/">Sponsors</a></li>
-								<li><a href="<?php echo($base); ?>contact-us/">Contact Us</a></li>
-								<li><a href="<?php echo($base); ?>about-us/">About Us</a></li>
-								<li><a href="<?php echo($base); ?>privacy-policy/">Privacy Policy</a></li>
-								<li><a href="<?php echo($base); ?>social-media/">Social Media</a></li>
-							</ul>
-						</li>
-						<li><a href="<?php echo($base); ?>donate/"><i class="fas fa-donate"></i> &nbsp;Please Donate</a></li>
-						<li><a href="<?php echo($base); ?>newsletter/">Newsletter Signup</a></li>
-					</ul>
-				</div>
+				<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+					<span class="navbar-brand mb-0 h1">CDUnion.ca</span>
+					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="collapse navbar-collapse" id="navbarNavDropdown">
+						<ul class="navbar-nav">
+							<li class="nav-item">
+								<a class="nav-link" href="<?=$BaseURL;?>"><i class="fas fa-home"></i> &nbsp;Home</a>
+							</li>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Menu</a>
+								<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+									<a class="dropdown-item" href="<?=$BaseURL;?>programs/">Programs</a>
+									<a class="dropdown-item" href="<?=$BaseURL;?>disability-facts/">Facts</a>
+									<a class="dropdown-item" href="<?=$BaseURL;?>what-percentage-of-adults-are-disabled/">Survey</a>
+								</div>
+							</li>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Other</a>
+								<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+									<a class="dropdown-item" href="<?=$BaseURL;?>news/">News</a>
+									<a class="dropdown-item" href="<?=$BaseURL;?>help-wanted/">Help Wanted</a>
+									<a class="dropdown-item" href="<?=$BaseURL;?>sponsors/">Sponsors</a>
+									<a class="dropdown-item" href="<?=$BaseURL;?>contact-us/">Contact Us</a>
+									<a class="dropdown-item" href="<?=$BaseURL;?>about-us/">About Us</a>
+									<a class="dropdown-item" href="<?=$BaseURL;?>privacy-policy/">Privacy Policy</a>
+									<a class="dropdown-item" href="<?=$BaseURL;?>social-media/">Social Media</a>
+								</div>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="<?=$BaseURL;?>donate/"><i class="fas fa-donate"></i> &nbsp;Please Donate</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="<?=$BaseURL;?>newsletter/">Newsletter Signup</a>
+							</li>
+						</ul>
+					</div>
+				</nav>
 			</header>
 			<main>
 				<h2>Credit Card Donation</h2>
-				<?php
-				echo ($body);
-				?>
+				<?=$body;?>
 			</main>
+			<div class="filler">
+			</div>
 			<footer>
+				<div class="navbar navbar-dark bg-primary align-text-bottom">
+					<span class="navbar-text">Copyright 2020 &nbsp;||&nbsp; Website created by Harold Indoe</span>
+					<span class="navbar-text"><a href="https://twitter.com/DisabilityUnion"><i class="fab fa-twitter fa-2x"></i></a> &nbsp;&nbsp;<a href="https://www.facebook.com/CanadianDisabilityUnion/"><i class="fab fa-facebook-square fa-2x"></i></a></span>
+				</div>
 			</footer>
 		</div>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-		<script src="https://s3.amazonaws.com/menumaker/menumaker.min.js"></script>
-		<script src="https://js.stripe.com/v3/"></script>
-		<script>
-			$("#cssmenu").menumaker({
-				title: "Menu",
-				breakpoint: 768,
-				format: "multitoggle"
-			});
-		</script>
-		<script>
-			// Set your publishable key: remember to change this to your live publishable key in production
-			// See your keys here: https://dashboard.stripe.com/account/apikeys
-			// var stripe = Stripe('censored');
-			var stripe = Stripe('censored');
-			var elements = stripe.elements();
-			// Custom styling can be passed to options when creating an Element.
-			var style = {
-				base: {
-					// Add your base input styles here. For example:
-					color: "#32325d",
-				}
-			};
-			// Create an instance of the card Element.
-			var card = elements.create('card', {style: style});
-			// Add an instance of the card Element into the `card-element` <div>.
-			card.mount('#card-element');
-			// Create a token or display an error when the form is submitted.
-			var form = document.getElementById('payment-form');
-			form.addEventListener('submit', function(event) {
-				event.preventDefault();
-				stripe.createToken(card).then(function(result) {
-					if (result.error) {
-						// Inform the customer that there was an error.
-						var errorElement = document.getElementById('card-errors');
-						errorElement.textContent = result.error.message;
-					} else {
-						function stripeTokenHandler(token) {
-							// Insert the token ID into the form so it gets submitted to the server
-							var form = document.getElementById('payment-form');
-							var hiddenInput = document.createElement('input');
-							hiddenInput.setAttribute('type', 'hidden');
-							hiddenInput.setAttribute('name', 'stripeToken');
-							hiddenInput.setAttribute('value', token.id);
-							form.appendChild(hiddenInput);
-							// Submit the form
-							form.submit();
-						}
-						// Send the token to your server.
-						stripeTokenHandler(result.token);
-					}
-				});
-			});
-		</script>
+		<link href="<?=$BaseURL;?>common/css.php?v=1.08" rel="stylesheet">
 	</body>
 </html>
